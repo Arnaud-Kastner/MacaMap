@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -115,7 +115,17 @@
 <body>
 
     <div class="content-container">
-        <h1 style="text-align: center;">Weather Map</h1>
+        <h1 style="text-align: center; font-size: 36px; color: #4CAF50; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; animation: blink 1s infinite;">MACAMAP</h1>
+
+<style>
+    @keyframes blink {
+        0% { color: #4CAF50; }
+        50% { color: #fff; }
+        100% { color: #4CAF50; }
+    }
+</style>
+
+        
 
         <!-- Barre de recherche -->
         <div class="search-container">
@@ -153,7 +163,7 @@
 
             autocompleteService = new google.maps.places.AutocompleteService();
 
-            // Ajouter un gestionnaire d'événements pour détecter les clics sur la carte
+            // Ajout d'un gestionnaire d'événements pour détecter les clics sur la carte
             map.addListener('click', function(event) {
                 clearMarker(); // Retirer le marqueur précédent
                 placeMarker(event.latLng); // Placer un nouveau marqueur
@@ -185,12 +195,12 @@
         function selectCity(cityName) {
             document.getElementById('search-bar').value = cityName;
             suggestionList.style.display = 'none';
-            clearMarker(); // Retirer le marqueur précédent
+            clearMarker(); // Retire le marqueur précédent
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({ 'address': cityName }, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     var position = results[0].geometry.location;
-                    placeMarker(position); // Placer un nouveau marqueur
+                    placeMarker(position); // Place un nouveau marqueur
                     map.setCenter(position);
                     getWeather(position.lat(), position.lng());
                 } else {
@@ -266,4 +276,5 @@
 
 </body>
 </html>
+
 
