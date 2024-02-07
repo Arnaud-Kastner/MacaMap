@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -9,24 +9,29 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            display: flex;
         }
 
         #map {
+            flex: 1;
             height: 600px;
-            width: 100%;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
         }
 
         .search-container {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1;
+            position: relative;
+            margin-bottom: 20px;
         }
 
         .search-bar {
             padding: 10px;
             font-size: 16px;
-            width: 300px;
+            width: calc(100% - 120px);
             border: 2px solid #ccc;
             border-radius: 25px;
             outline: none;
@@ -53,14 +58,11 @@
         }
 
         .weather-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
             background-color: #fff;
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 1;
+            margin-bottom: 20px;
             text-align: center;
         }
 
@@ -69,17 +71,35 @@
             height: 50px;
         }
 
+        .forecast-container {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .forecast-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         .suggestion-list {
             position: absolute;
-            top: 60px;
-            left: 20px;
-            width: 300px;
+            top: 100%;
+            left: 0;
+            width: calc(100% - 40px);
             background-color: #fff;
             border: 2px solid #ccc;
             border-radius: 5px;
             padding: 5px;
             z-index: 2;
             display: none;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .suggestion-item {
@@ -94,17 +114,22 @@
 </head>
 <body>
 
-    <h1 style="text-align: center;">Weather Map</h1>
+    <div class="content-container">
+        <h1 style="text-align: center;">Weather Map</h1>
 
-    <!-- Barre de recherche -->
-    <div class="search-container">
-        <input type="text" class="search-bar" id="search-bar" placeholder="Rechercher une ville" oninput="getSuggestions()">
-        <button onclick="searchCity()" class="search-button">Rechercher</button>
-        <div id="suggestion-list" class="suggestion-list"></div>
+        <!-- Barre de recherche -->
+        <div class="search-container">
+            <input type="text" class="search-bar" id="search-bar" placeholder="Rechercher une ville" oninput="getSuggestions()">
+            <button onclick="searchCity()" class="search-button">Rechercher</button>
+            <div id="suggestion-list" class="suggestion-list"></div>
+        </div>
+
+        <!-- Informations météorologiques -->
+        <div id="weather-info" class="weather-info"></div>
+
+        <!-- Prévisions météorologiques -->
+        <div id="forecast-container" class="forecast-container"></div>
     </div>
-
-    <!-- Informations météorologiques -->
-    <div id="weather-info" class="weather-info"></div>
 
     <!-- Carte Google Maps -->
     <div id="map"></div>
@@ -117,6 +142,7 @@
         var weatherInfoWindow;
         var autocompleteService;
         var suggestionList = document.getElementById('suggestion-list');
+        var marker;
 
         function initMap() {
             // Créer une carte Google Maps centrée sur une position par défaut
@@ -129,6 +155,8 @@
 
             // Ajouter un gestionnaire d'événements pour détecter les clics sur la carte
             map.addListener('click', function(event) {
+                clearMarker(); // Retirer le marqueur précédent
+                placeMarker(event.latLng); // Placer un nouveau marqueur
                 getWeather(event.latLng.lat(), event.latLng.lng());
             });
         }
@@ -157,67 +185,82 @@
         function selectCity(cityName) {
             document.getElementById('search-bar').value = cityName;
             suggestionList.style.display = 'none';
-            searchCity();
-        }
-
-        function searchCity() {
-            var cityName = document.getElementById('search-bar').value;
-
-            if (cityName.trim() === 'MACAMAP') {
-                window.location.href = 'https://youtu.be/svexj5f1lcA?si=HLG8e4TCP6rgRQRJ';
-                return;
-            }
-
-            // Utiliser l'API Places pour obtenir les coordonnées de la ville
-            var placesService = new google.maps.places.PlacesService(map);
-            placesService.textSearch({ query: cityName }, function(results, status) {
-                if (status === google.maps.places.PlacesServiceStatus.OK && results[0]) {
-                    var cityLocation = results[0].geometry.location;
-
-                    // Centrer la carte sur la position de la ville
-                    map.setCenter(cityLocation);
-                    map.setZoom(10);
-
-                    // Obtenir les données météorologiques de la ville
-                    getWeather(cityLocation.lat(), cityLocation.lng());
-                } else if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-                    alert("Aucun résultat trouvé pour la ville spécifiée.");
+            clearMarker(); // Retirer le marqueur précédent
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': cityName }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var position = results[0].geometry.location;
+                    placeMarker(position); // Placer un nouveau marqueur
+                    map.setCenter(position);
+                    getWeather(position.lat(), position.lng());
                 } else {
-                    alert("Une erreur s'est produite lors de la recherche de la ville. Veuillez réessayer.");
+                    alert('Geocode was not successful for the following reason: ' + status);
                 }
             });
         }
 
+        function clearMarker() {
+            if (marker) {
+                marker.setMap(null);
+            }
+        }
+
+        function placeMarker(location) {
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+        }
+
         function getWeather(latitude, longitude) {
-            // Remplacez 'YOUR_API_KEY' par votre clé d'API OpenWeatherMap
             var apiKey = 'ba95b1352e9467f155a0636c0fd4208c';
+            var apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + apiKey + '&lang=fr';
 
-            // Construire l'URL de l'API OpenWeatherMap avec la langue française
-            var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitude + '&lon=' + longitude + '&appid=' + apiKey + '&lang=fr';
-
-            // Effectuer la requête HTTP
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     console.log('Réponse de l\'API OpenWeatherMap:', data);
 
-                    // Convertir la température de Kelvin à Celsius
-                    var temperatureCelsius = data.main.temp - 273.15;
+                    // Obtenir le nom de la ville
+                    var cityName = data.city.name;
 
-                    // Afficher les informations météorologiques
-                    showWeatherInfo(data.name, data.weather[0].description, temperatureCelsius.toFixed(2), data.weather[0].icon);
+                    // Obtenir les prévisions météorologiques
+                    var forecasts = data.list;
+
+                    // Afficher les informations des prévisions météorologiques
+                    showWeatherForecasts(cityName, forecasts);
                 })
                 .catch(error => console.error('Erreur lors de la récupération des données météorologiques:', error));
         }
 
-        function showWeatherInfo(cityName, weatherDescription, temperature, weatherIcon) {
-            // Afficher les informations météorologiques dans la boîte d'informations
-            document.getElementById('weather-info').innerHTML = `
-                <h3>${cityName}</h3>
-                <p>Météo actuelle: ${weatherDescription}</p>
-                <p>Température: ${temperature} °C</p>
-                <img src="http://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon" class="weather-icon">
-            `;
+        function showWeatherForecasts(cityName, forecasts) {
+            var forecastContainer = document.getElementById('forecast-container');
+            forecastContainer.innerHTML = ''; // Efface le contenu précédent
+
+            // Afficher le nom de la ville
+            var cityHeader = document.createElement('h2');
+            cityHeader.textContent = 'Prévisions pour ' + cityName;
+            forecastContainer.appendChild(cityHeader);
+
+            forecasts.forEach(forecast => {
+                // Convertir la température de Kelvin à Celsius
+                var temperatureCelsius = forecast.main.temp - 273.15;
+
+                // Formatage de la date et de l'heure
+                var forecastDate = new Date(forecast.dt * 1000); // Convertir la date Unix en millisecondes
+                var formattedDate = forecastDate.toLocaleDateString('fr-FR', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+
+                // Créer un élément pour afficher les informations de prévision
+                var forecastElement = document.createElement('div');
+                forecastElement.classList.add('forecast-item');
+                forecastElement.innerHTML = `
+                    <p>${formattedDate}</p>
+                    <p>Météo: ${forecast.weather[0].description}</p>
+                    <p>Température: ${temperatureCelsius.toFixed(2)} °C</p>
+                    <img src="http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png" alt="Weather Icon" class="weather-icon">
+                `;
+                forecastContainer.appendChild(forecastElement);
+            });
         }
     </script>
 
