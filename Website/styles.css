@@ -1,0 +1,183 @@
+/* Réinitialisation des marges et des paddings */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Styles pour l'entête */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+}
+
+#logo-container {
+    display: flex;
+    align-items: center;
+}
+
+#logo {
+    width: 100px; /* Taille du logo */
+    height: auto; /* Hauteur ajustée automatiquement en fonction de la largeur */
+    margin-right: 10px; /* Marge à droite du logo */
+}
+
+#title {
+    margin: 0;
+}
+
+/* Styles pour la section de contenu */
+.content-container {
+    display: flex;
+    height: calc(100% - 80px); /* Hauteur totale moins la hauteur de l'entête */
+}
+
+.left-section {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.right-section {
+    flex: 2;
+    position: relative;
+}
+
+/* Styles pour la barre de recherche */
+.search-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    padding: 10px;
+    font-size: 16px;
+    width: calc(100% - 120px);
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-bar:focus {
+    border-color: #4CAF50;
+}
+
+.search-button {
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+.suggestion-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: calc(100% - 40px);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0 0 5px 5px;
+    border-top: none;
+    padding: 5px;
+    z-index: 2;
+    display: none;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.suggestion-item:hover {
+    background-color: #f2f2f2;
+}
+
+/* Styles pour les informations météo */
+.weather-info {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.weather-icon {
+    width: 50px;
+    height: 50px;
+}
+
+/* Styles pour les prévisions météo */
+.forecast-container {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.forecast-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Styles pour la carte */
+#map {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+@keyframes rotateTitle {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .animate-title {
+    animation: rotateTitle 1s ease-in-out;
+  }
+  #title {
+    font-size: 3em; /* Taille de la police */
+    color: #4CAF50; /* Couleur du texte */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Ombre portée du texte */
+    letter-spacing: 2px; /* Espacement entre les lettres */
+    text-align: center; /* Alignement du texte */
+    margin-top: 10px; /* Marge supérieure */
+    animation: rainbowText 5s infinite; /* Animation arc-en-ciel infinie */
+}
+
+@keyframes rainbowText {
+    0% { color: #4CAF50; } /* Vert */
+    25% { color: #FFC107; } /* Jaune */
+    50% { color: #FF5722; } /* Orange */
+    75% { color: #2196F3; } /* Bleu */
+    100% { color: #4CAF50; } /* Vert */
+}
+  
