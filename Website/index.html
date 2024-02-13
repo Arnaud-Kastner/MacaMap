@@ -1,16 +1,40 @@
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Page d'acceuil MacaMap</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Carte Météo</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <div class="container">  
-    <h1 class="centered-title">Welcome to MacaMap</h1>
-  </div>
-  <div class="container">
-    <button onclick="location.href='main.html';" class="styled" type="button">Get Started</button>
-  </div>
+    <header>
+        <div id="logo-container">
+            <img id="logo" src="C:\Users\maxen\Desktop\MACAMAP 2\Logo_Macamap.JPG" alt="Logo">
+            <h1 id="title" class="animate-title">MACAMAP</h1>
+
+        </div>
+    </header>
+
+    <div class="content-container">
+        <div class="left-section">
+            <div class="search-container">
+                <input type="text" class="search-bar" id="search-bar" placeholder="Rechercher une ville">
+                <button onclick="searchCity()" class="search-button">Rechercher</button>
+                <div id="suggestion-list" class="suggestion-list"></div>
+            </div>
+
+            <div id="weather-info" class="weather-info"></div>
+
+            <div id="forecast-container" class="forecast-container"></div>
+        </div>
+
+        <div class="right-section">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsH7HxPLYvr6xID0U4j_DB0W_d3KJ35cM&libraries=places&callback=initMap" async defer></script>
+    <script src="script.js"></script>
 </body>
+</html>
+
