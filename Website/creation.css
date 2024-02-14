@@ -1,0 +1,10 @@
+body {
+    font-family: "Helvetica";
+    text-align: center;
+    color: whitesmoke;
+    background: linear-gradient(to right, black, green)
+    }
+
+input [type="submit"]{
+    border-radius: 5px;
+}
