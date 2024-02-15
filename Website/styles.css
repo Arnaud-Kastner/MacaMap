@@ -25,6 +25,22 @@ header {
 
 #title {
     margin: 0;
+    font-size: 3em; /* Taille de la police */
+    color: #4CAF50; /* Couleur du texte */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Ombre portée du texte */
+    letter-spacing: 2px; /* Espacement entre les lettres */
+    text-align: center; /* Alignement du texte */
+    margin-top: 10px; /* Marge supérieure */
+    animation: rainbowText 5s infinite; /* Animation arc-en-ciel infinie */
+}
+
+/* Animation pour le titre */
+@keyframes rainbowText {
+    0% { color: #4CAF50; } /* Vert */
+    25% { color: #FFC107; } /* Jaune */
+    50% { color: #FF5722; } /* Orange */
+    75% { color: #2196F3; } /* Bleu */
+    100% { color: #4CAF50; } /* Vert */
 }
 
 /* Styles pour la section de contenu */
@@ -151,33 +167,5 @@ header {
     margin: 0;
     padding: 0;
 }
-@keyframes rotateTitle {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  .animate-title {
-    animation: rotateTitle 1s ease-in-out;
-  }
-  #title {
-    font-size: 3em; /* Taille de la police */
-    color: #4CAF50; /* Couleur du texte */
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Ombre portée du texte */
-    letter-spacing: 2px; /* Espacement entre les lettres */
-    text-align: center; /* Alignement du texte */
-    margin-top: 10px; /* Marge supérieure */
-    animation: rainbowText 5s infinite; /* Animation arc-en-ciel infinie */
-}
 
-@keyframes rainbowText {
-    0% { color: #4CAF50; } /* Vert */
-    25% { color: #FFC107; } /* Jaune */
-    50% { color: #FF5722; } /* Orange */
-    75% { color: #2196F3; } /* Bleu */
-    100% { color: #4CAF50; } /* Vert */
-}
   
