@@ -11,14 +11,16 @@
 <div>
     <p>
     <?php
+
     if(isset($_POST['create'])){
+
         $identifiant = $_POST['identifiant'];
         $password = $_POST['password'];
  
-        echo "Identifiant :" . $identifiant;
-        echo "Mot de passe : " . $password;
+        echo "Connexion Réussie, profitez bien de votre expérience cher ". $identifiant;
     }
     ?>
+
     </p>
 </div>
 
@@ -42,3 +44,5 @@
         </div>
     </form>
 </div>
+
+</body>
