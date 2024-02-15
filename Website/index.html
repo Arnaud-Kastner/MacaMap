@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <body onload="initMap()">
+
+    
     <header>
         <div id="logo-container">
-            <img id="logo" src="C:\Users\maxen\Desktop\MACAMAP 2\Logo_Macamap.JPG" alt="Logo">
+            <img id="logo" src="C:\Users\RFTP4218\OneDrive - orange.com\Bureau\SAé PRogrammation\test m/Logo_Macamap.JPG" alt="Logo">
             <h1 id="title" class="animate-title">MACAMAP</h1>
 
         </div>
@@ -29,12 +32,11 @@
         </div>
 
         <div class="right-section">
-            <div id="map"></div>
+            <div id="map"><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsH7HxPLYvr6xID0U4j_DB0W_d3KJ35cM&libraries=places&callback=initMap" async defer></script></div>
         </div>
     </div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsH7HxPLYvr6xID0U4j_DB0W_d3KJ35cM&libraries=places&callback=initMap" async defer></script>
+   
     <script src="script.js"></script>
 </body>
 </html>
-
