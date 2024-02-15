@@ -41,13 +41,24 @@ function initMap() {
         { name: "Ottawa", lat: 45.4215, lng: -75.6972 },
         { name: "Canberra", lat: -35.2809, lng: 149.1300 },
         { name: "Madrid", lat: 40.4168, lng: -3.7038 },
-        // Ajout de quelques capitales supplémentaires
         { name: "Bangkok", lat: 13.7563, lng: 100.5018 },
         { name: "Stockholm", lat: 59.3293, lng: 18.0686 },
         { name: "Ankara", lat: 39.9334, lng: 32.8597 },
         { name: "Lagos", lat: 6.5244, lng: 3.3792 },
-        { name: "Sydney", lat: -33.8688, lng: 151.2093 }
+        { name: "Sydney", lat: -33.8688, lng: 151.2093 },
+        { name: "Brussels", lat: 50.8503, lng: 4.3517 },
+        { name: "Dublin", lat: 53.3498, lng: -6.2603 },
+        { name: "Athens", lat: 37.9838, lng: 23.7275 },
+        { name: "Oslo", lat: 59.9139, lng: 10.7522 },
+        { name: "Vienna", lat: 48.2082, lng: 16.3738 },
+        { name: "Warsaw", lat: 52.2297, lng: 21.0122 },
+        { name: "Helsinki", lat: 60.1695, lng: 24.9354 },
+        { name: "Buenos Aires", lat: -34.6037, lng: -58.3816 },
+        { name: "Jakarta", lat: -6.2088, lng: 106.8456 },
+        { name: "Kuala Lumpur", lat: 3.1390, lng: 101.6869 },
+        { name: "Santiago", lat: -33.4489, lng: -70.6693 }
     ];
+    
     capitals.forEach(function(capital) {
         var marker = new google.maps.Marker({
             position: { lat: capital.lat, lng: capital.lng },
@@ -55,7 +66,7 @@ function initMap() {
             title: capital.name,
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                fillColor: '#4CAF50',
+                fillColor: '#3498db',
                 fillOpacity: 1,
                 strokeColor: '#FFFFFF',
                 strokeWeight: 2,
@@ -94,7 +105,7 @@ function initMap() {
 
         // Animation lorsque le curseur quitte le bouton
         button.addEventListener('mouseout', function() {
-            button.style.backgroundColor = '#4CAF50';
+            button.style.backgroundColor = '#e74c3c';
         });
 
         // Animation lorsque le bouton est cliqué
@@ -106,6 +117,7 @@ function initMap() {
         });
     });
 }
+
 
 
 function getSuggestions() {
