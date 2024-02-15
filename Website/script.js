@@ -3,8 +3,11 @@ var weatherInfoWindow;
 var autocompleteService;
 var suggestionList;
 var marker;
+var initMap;
 
 function initMap() {
+    console.log("initMap function appeler.");
+
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 20, lng: 0 },
         zoom: 2
@@ -14,10 +17,13 @@ function initMap() {
     suggestionList = document.getElementById('suggestion-list');
 
     map.addListener('click', function(event) {
-        clearMarker();
-        placeMarkerAndZoom(event.latLng);
-        getWeather(event.latLng.lat(), event.latLng.lng());
+        console.log("Click event on map detected.");
+
+        clearMarker(); // Effacer le marqueur précédent
+        placeMarkerAndZoom(event.latLng); // Placer un marqueur sur le point cliqué et zoomer sur cette zone
+        getWeather(event.latLng.lat(), event.latLng.lng()); // Obtenir les prévisions météorologiques pour les coordonnées du point cliqué
     });
+    console.log("Carte initialisée avec succès.");
 
     var capitals = [
         { name: "Paris", lat: 48.8566, lng: 2.3522 },
@@ -57,20 +63,24 @@ function initMap() {
                 labelOrigin: new google.maps.Point(0, -15)
             }
         });
-
+    
         // Création de l'infobulle pour chaque capitale
         var infowindow = new google.maps.InfoWindow({
-            content: '<div><strong>' + capital.name + '</strong></div>'
+            content: '<div><strong>' + capital.name + '</strong></div><div>Température: ' + capital.temperature + ' °C</div>'
+        
         });
-
+    
         marker.addListener('click', function() {
             infowindow.open(map, marker);
             getWeather(capital.lat, capital.lng);
+            map.setCenter(marker.getPosition()); // Centrer la carte sur la ville sélectionnée
+            map.setZoom(10); // Ajuster le zoom de la carte
         });
-
+    
         // Obtention des prévisions météorologiques pour chaque capitale
         getWeather(capital.lat, capital.lng);
     });
+    
 
     // Sélectionner tous les boutons de recherche
     var searchButtons = document.querySelectorAll('.search-button');
@@ -97,6 +107,7 @@ function initMap() {
     });
 }
 
+
 function getSuggestions() {
     var input = document.getElementById('search-bar').value;
     if (input.trim() === '') {
@@ -119,6 +130,7 @@ function getSuggestions() {
 }
 
 function selectCity(cityName) {
+    console.log("Sélection de la ville :", cityName);
     document.getElementById('search-bar').value = cityName;
     suggestionList.style.display = 'none';
     clearMarker();
@@ -153,22 +165,27 @@ function placeMarkerAndZoom(location) {
     map.setZoom(10);
 }
 
-function getWeather(latitude, longitude) {
-    var apiKey = 'ba95b1352e9467f155a0636c0fd4208c';
-    var apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + apiKey + '&lang=fr';
+ function getWeather(latitude, longitude, capital
+) {
+            var apiKey = 'ba95b1352e9467f155a0636c0fd4208c';
+            var apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longitude + '&appid=' + apiKey + '&lang=fr';
 
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            console.log('Réponse de l\'API OpenWeatherMap:', data);
-            var cityName = data.city.name;
-            var forecasts = data.list;
-            console.log('Données de prévisions:', forecasts); // Vérifiez les données de prévisions
-            showWeatherForecasts(cityName, forecasts);
-            createTemperatureGrid(map, forecasts);
-        })
-        .catch(error => console.error('Erreur lors de la récupération des données météorologiques:', error));
-}
+            fetch(apiUrl)
+            
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Réponse de l\'API OpenWeatherMap:', data);
+                    
+                    var cityName = data.city.name;
+                    var forecasts = data.list;
+                    
+                     showWeatherForecasts(cityName, forecasts);
+                })
+                
+                .catch(error => console.error('Erreur lors de la récupération des données météorologiques:', error));
+        }
+        
+
 
 function showWeatherForecasts(cityName, forecasts) {
     var forecastContainer = document.getElementById('forecast-container');
@@ -193,16 +210,16 @@ function showWeatherForecasts(cityName, forecasts) {
         `;
         forecastContainer.appendChild(forecastElement);
     });
+
 }
 
-// Fonction pour créer un quadrillage et visualiser les températures
+
+
 function createTemperatureGrid(map, forecasts) {
-    // Définir les dimensions du quadrillage (par exemple, 10x10 grilles)
     var gridSize = 10;
     var gridWidth = 360 / gridSize;
     var gridHeight = 180 / gridSize;
 
-    // Calculer la température moyenne pour chaque grille
     var temperatureGrid = [];
     for (var i = 0; i < gridSize; i++) {
         for (var j = 0; j < gridSize; j++) {
@@ -212,9 +229,9 @@ function createTemperatureGrid(map, forecasts) {
             var maxTemperature = Number.MIN_VALUE;
             for (var k = 0; k < forecasts.length; k++) {
                 var forecast = forecasts[k];
-                if (forecast.city && forecast.city.coord) {
-                    var lat = forecast.city.coord.lat;
-                    var lon = forecast.city.coord.lon;
+                if (forecast.coord) {
+                    var lat = forecast.coord.lat;
+                    var lon = forecast.coord.lon;
                     if (lat >= -90 + gridHeight * i && lat < -90 + gridHeight * (i + 1) &&
                         lon >= -180 + gridWidth * j && lon < -180 + gridWidth * (j + 1)) {
                         sumTemperature += forecast.main.temp;
@@ -235,15 +252,14 @@ function createTemperatureGrid(map, forecasts) {
         }
     }
 
-    // Dessiner chaque grille sur la carte avec une couleur correspondant à la température moyenne
-    temperatureGrid.forEach(function (grid) {
+    temperatureGrid.forEach(function(grid) {
         var color = getColorForTemperature(grid.temperature);
         var rectangle = new google.maps.Rectangle({
             strokeColor: color,
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: color,
-            fillOpacity: 0, // Réduire la transparence (0 signifie transparent, 1 signifie opaque)
+            fillOpacity: 0,
             map: map,
             bounds: {
                 north: grid.lat + gridHeight / 2,
@@ -254,6 +270,12 @@ function createTemperatureGrid(map, forecasts) {
         });
     });
 }
+
+
+// Supprimez la fonction temperatureGrid à l'intérieur de createTemperatureGrid
+
+// Correction de la balise de fermeture de la fonction createTemperatureGrid
+
 
 function getColorForTemperature(temperature) {
     // Définir les plages de température et leurs couleurs correspondantes
