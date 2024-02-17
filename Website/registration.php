@@ -26,16 +26,14 @@
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        $data = [$identifiant,$email,$password];
-
         /*echo "Identifiant :" . $identifiant;
         echo "Email : " . $email;
         echo "Mot de passe : " . $password;*/
         //echo "ICCCCCIIIIIIII3333333333333333333I" ;
-        $insert = "INSERT INTO comptes (Identifiant, Email, Password) VALUES ('". $identifiant ."','"  . $email . "','" . $password . "');";
+        $insert = "INSERT INTO comptes (Identifiant, Email, Password) VALUES (?,?,?);";
         //echo "ICCCCCIIIIIIIII"  . $insert;
         $stmt = $mySQLclient -> prepare ($insert);
-        $stmt -> execute($data);
+        $stmt -> execute([$identifiant, $email,$password]);
     }
 
 
