@@ -1,10 +1,10 @@
 body {
-    font-family: "Helvetica";
+    font-family: "Helvetica", sans-serif;
     text-align: center;
     color: whitesmoke;
-    background: linear-gradient(to right, black, green)
-    }
+    background: linear-gradient(to right, black, green);
+}
 
-input [type="submit"]{
+input[type="submit"] {
     border-radius: 5px;
 }
